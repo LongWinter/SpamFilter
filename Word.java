@@ -24,14 +24,14 @@ public class Word{
     }
 
     // this is the method to calculate spamRate and hamRate
-    public void calculateRate(int totalSpam, int totalHam){
-        this.spamRate = spamCount / totalSpam;
-        this.hamRate = hamCount / totalHam;
+    public void calculateRate(int totalSpam, int totalHam, int k){
+        this.spamRate = ((double)spamCount + (1/(double)k))/ ((double)(totalSpam) + 1);
+        this.hamRate = ((double)hamCount + (1/(double)k)) / ((double)(totalSpam)+1);
     }
 
 
 
-
+ 
     // this is the getter method for spamcount
     public int getSpamCount(){
         return this.spamCount;
