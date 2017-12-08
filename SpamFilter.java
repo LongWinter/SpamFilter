@@ -14,8 +14,10 @@ public class SpamFilter{
 
     static int predictHamInTestingHam = 0;
     static int predictSpamInTestingHam = 0;
+    static int cantPredictInTestingHam = 0;
     static int predictHamInTestingSpam = 0;
     static int predictSpamInTestingSpam = 0;
+    static int cantPredictInTestingSpam = 0;
 
     public static void main(String[] args){
         try{
@@ -25,8 +27,8 @@ public class SpamFilter{
             e.printStackTrace();
         }
 
-        System.out.println("Total Spam: "+totalSpam);
-        System.out.println("Total Ham: "+totalHam);
+        System.out.println("Total Spam in training/spam: "+totalSpam);
+        System.out.println("Total Ham in training/ham: "+totalHam);
         removeNoise1();
         processWordProbability();
         removeNoise2();
@@ -42,11 +44,13 @@ public class SpamFilter{
         System.out.println("\n\nTotal Ham in testing: "+ totalHamInTesting);
         System.out.println("Total predicted Spam in Testing/Ham: "+ predictSpamInTestingHam);
         System.out.println("Total predicted Ham in Testing/Ham: "+ predictHamInTestingHam);
+        System.out.println("Total number of files cannot predict in Testing/Ham: "+cantPredictInTestingHam);
         System.out.println();
 
         System.out.println("\n\nTotal Spam in testing: "+ totalSpamInTesting);
         System.out.println("Total predicted Spam in Testing/Spam: "+ predictSpamInTestingSpam);
         System.out.println("Total predicted Ham in Testing/Spam: "+ predictHamInTestingSpam);
+        System.out.println("Total number of files cannot predict in Testing/Spam: "+cantPredictInTestingSpam);
         System.out.println();
 
         
@@ -69,6 +73,7 @@ public class SpamFilter{
                 }else{
                     if(findContent == true){
                         String[] splitted = line.split("[\\s\\.\\!\\\"\\%\\$\\*\\+\\&\\,\\?\\/\\<\\>\\#\\-\\)\\:\\(\\)\\~\\{\\}\\;\\[\\]]+");
+                        //String[] splitted = line.split("\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\,\\<\\.\\>\\?\\/\\[\\{\\}\\}\\;\\:\\'\\|\\\"");
                         for (String a : splitted){
                             a = a.trim();
                             if(!a.isEmpty()){
@@ -111,6 +116,7 @@ public class SpamFilter{
                 }else{
                     if(findContent == true){
                         String[] splitted = line.split("[\\s\\.\\!\\\"\\%\\$\\*\\+\\&\\,\\?\\/\\<\\>\\#\\-\\)\\:\\(\\)\\~\\{\\}\\;\\[\\]]+");
+                        //String[] splitted = line.split("\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\,\\<\\.\\>\\?\\/\\[\\{\\}\\}\\;\\:\\'\\|\\\"");
                         for (String a : splitted){
                             a = a.trim();
                             if(!a.isEmpty()){
@@ -151,13 +157,13 @@ public class SpamFilter{
             }
         }
 
-        System.out.println("Total words in the frequency table before prunung: "+ dictionary.size());
-        System.out.println("Total Words to be pruned away: "+ toBeRemoved.size());
+        System.out.println("Total words in the frequency table before prunung using condition 1: "+ dictionary.size());
+        System.out.println("Total Words to be pruned away using condition 1: "+ toBeRemoved.size());
 
         for (String s : toBeRemoved){
             dictionary.remove(s);
         }
-        System.out.println("Total words in the frequency table after pruning: "+ dictionary.size());
+        System.out.println("Total words in the frequency table after pruning using condition 1: "+ dictionary.size());
     }
 
     // calculate the conditional probability based on the paper
@@ -184,13 +190,13 @@ public class SpamFilter{
             }
         }
 
-        System.out.println("Total words in the frequency table before prunung: "+ dictionary.size());
-        System.out.println("Total Words to be pruned away: "+ toBeRemoved.size());
+        System.out.println("Total words in the frequency table before prunung using condition 2: "+ dictionary.size());
+        System.out.println("Total Words to be pruned away using condition 2: "+ toBeRemoved.size());
 
         for (String s : toBeRemoved){
             dictionary.remove(s);
         }
-        System.out.println("Total words in the frequency table after pruning: "+ dictionary.size());
+        System.out.println("Total words in the frequency table after pruning using condition 2: "+ dictionary.size());
     }
 
     // print the frequency table 
@@ -223,6 +229,7 @@ public class SpamFilter{
                 }else{
                     if(findContent == true){
                         String[] splitted = line.split("[\\s\\.\\!\\\"\\%\\$\\*\\+\\&\\,\\?\\/\\<\\>\\#\\-\\)\\:\\(\\)\\~\\{\\}\\;\\[\\]]+");
+                        //String[] splitted = line.split("\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\,\\<\\.\\>\\?\\/\\[\\{\\}\\}\\;\\:\\'\\|\\\"");
                         for (String a : splitted){
                             a = a.trim();
                             if(!a.isEmpty()){
@@ -252,7 +259,7 @@ public class SpamFilter{
                 }
 
             }else{
-                System.out.println("what the hell????");
+                cantPredictInTestingHam++;
             }
             reader.close();
         }
@@ -276,6 +283,7 @@ public class SpamFilter{
                 }else{
                     if(findContent == true){
                         String[] splitted = line.split("[\\s\\.\\!\\\"\\%\\$\\*\\+\\&\\,\\?\\/\\<\\>\\#\\-\\)\\:\\(\\)\\~\\{\\}\\;\\[\\]]+");
+                        //String[] splitted = line.split("\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\,\\<\\.\\>\\?\\/\\[\\{\\}\\}\\;\\:\\'\\|\\\"");
                         for (String a : splitted){
                             a = a.trim();
                             if(!a.isEmpty()){
@@ -305,7 +313,7 @@ public class SpamFilter{
                 }
 
             }else{
-                System.out.println("what the hell????");
+                cantPredictInTestingSpam++;
             }
             reader.close();
         }
